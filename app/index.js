@@ -18,7 +18,7 @@ app.use(routes);
 app.use(express.static(`${__dirname}\\..\\public\\build`));
 
 app.get("/", (req, res) =>
-  res.sendFile("index.html", { root: `${__dirname}\\..\\public\\build` })
+  res.sendFile("index.html", { root: `${__dirname}/../public/build` })
 );
 
 module.exports = function constructor(settings) {
