@@ -11,7 +11,7 @@ module.exports = {
   },
   eventHandler: async (req, res) => {
     let { event, Payload } = req.body;
-    Payload = JSON.parse(Payload);
+    if (Payload) Payload = JSON.parse(Payload);
     switch (event) {
       case "sent":
         console.log({ event, Payload });
