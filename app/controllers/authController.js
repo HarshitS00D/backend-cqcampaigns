@@ -6,15 +6,17 @@ const { User } = require("../../database/models");
 const checkAuth = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const urlPaths = req.originalUrl.split("/");
+  console.log(urlPaths);
   if (
     urlPaths.includes("unsubscribe") ||
     (urlPaths.includes("analytics") &&
-      urlPaths.includes("sent") &&
-      urlPaths.includes("bounce"))
-  )
+      (urlPaths.includes("sent") || urlPaths.includes("bounce")))
+  ) {
     return next();
+  }
   services.auth.verifyToken(authHeader, (err, user) => {
     if (err) {
+      console.log(err);
       return res.send({ error: "Invalid Token" });
     }
     req.user = user;

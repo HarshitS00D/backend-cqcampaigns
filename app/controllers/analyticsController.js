@@ -22,6 +22,7 @@ module.exports = {
         res.send("bounce");
         break;
       default:
+        console.log(req.body);
         res.send(req.body);
     }
   },
