@@ -10,7 +10,17 @@ module.exports = {
     res.send(response);
   },
   eventHandler: async (req, res) => {
-    console.log(req.body);
-    res.send("ok");
+    let { event, Payload } = req.body;
+    Payload = JSON.parse(Payload);
+    switch (event) {
+      case "sent":
+        res.send("sent");
+        break;
+      case "bounce":
+        res.send("bounce");
+        break;
+      default:
+        res.send(req.body);
+    }
   },
 };

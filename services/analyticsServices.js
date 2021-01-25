@@ -6,6 +6,7 @@ module.exports = {
     try {
       const analytics = new Analytics({ campaignID, ...payload });
       await analytics.save();
+      return analytics;
     } catch (error) {
       console.log(error);
     }

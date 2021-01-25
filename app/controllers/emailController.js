@@ -34,13 +34,20 @@ const sendEmails = async (req, res) => {
       return res
         .status(400)
         .send({ error: "Empty subscriber list", subscribers });
+
+    const analytics = await services.analytics.updateCampaignStats(campaignID);
+
+    if (!analytics)
+      return res.status(500).send({ error: "Internal Server Error" });
+
     for (subscriber of subscribers) {
       if (!subscriber.subscribed) continue;
       const resp = await services.email.sendMail(
         subscriber,
         template,
         getTransformedBody(template.body, template.analytics, req),
-        req.user
+        req.user,
+        analytics._id
       );
 
       if (
@@ -50,13 +57,6 @@ const sendEmails = async (req, res) => {
         return res.status(401).send({
           error: "Mailjet API key authentication/authorization failure",
         });
-      await services.analytics.updateCampaignStats(campaignID, {
-        $push: {
-          [resp.response.status === 200 ? "delivered" : "bounced"]: {
-            timestamp: Date.now().toString(),
-          },
-        },
-      });
     }
   }
 
@@ -73,8 +73,8 @@ function getTransformedBody(body, analytics, req) {
   analytics.forEach((el) => {
     switch (el) {
       case 2:
-        result += `<a  href="[[UNSUB_LINK]]" >Unsubscribe</a>`;
-        // result += `<a  href="${serverUrl}/api/subscriber/unsubscribe/${subscriber._doc._id}" >Unsubscribe</a>`;
+        //result += `<a  href="[[UNSUB_LINK]]" >Unsubscribe</a>`;
+        result += `<a  href="${serverUrl}/api/subscriber/unsubscribe/${subscriber._doc._id}" >Unsubscribe</a>`;
         break;
       case 0:
         result += `<img src="${serverUrl}/api/analytics/img?sub=${subscriber._doc._id}" >`;

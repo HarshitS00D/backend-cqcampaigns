@@ -1,7 +1,7 @@
 const _ = require("lodash");
 const settingsServices = require("./settingsServices");
 
-const sendMail = async (subscriber, template, body, user) => {
+const sendMail = async (subscriber, template, body, user, analyticsID) => {
   try {
     const settings = await settingsServices.getSettings(user._id);
     const mailjet = require("node-mailjet").connect(
@@ -24,7 +24,7 @@ const sendMail = async (subscriber, template, body, user) => {
           ],
           Subject: template.subject,
           [`${template.bodyType === 1 ? "HTML" : "Text"}Part`]: body,
-          EventPayload: JSON.stringify(subscriber),
+          EventPayload: JSON.stringify({ subscriber, analyticsID }),
         },
       ],
     });

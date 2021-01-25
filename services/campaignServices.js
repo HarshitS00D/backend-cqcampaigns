@@ -6,7 +6,7 @@ module.exports = {
     try {
       if (!userID) throw new Error("No user id");
       const campaign = new Campaign({ userID, ...data });
-      await new Analytics({ campaignID: campaign._id }).save();
+      // await new Analytics({ campaignID: campaign._id }).save();
       await campaign.save();
       return campaign;
     } catch (error) {
