@@ -5,7 +5,7 @@ const { User } = require("../../database/models");
 
 const checkAuth = (req, res, next) => {
   const authHeader = req.headers["authorization"];
-  const urlPaths = req.url.split("/");
+  const urlPaths = req.originalUrl.split("/");
   if (urlPaths.includes("unsubscribe") || urlPaths.includes("analytics"))
     return next();
   services.auth.verifyToken(authHeader, (err, user) => {
