@@ -6,7 +6,12 @@ const { User } = require("../../database/models");
 const checkAuth = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const urlPaths = req.originalUrl.split("/");
-  if (urlPaths.includes("unsubscribe") || urlPaths.includes("analytics"))
+  if (
+    urlPaths.includes("unsubscribe") ||
+    (urlPaths.includes("analytics") &&
+      urlPaths.includes("sent") &&
+      urlPaths.includes("bounce"))
+  )
     return next();
   services.auth.verifyToken(authHeader, (err, user) => {
     if (err) {
