@@ -23,7 +23,7 @@ const sendMail = async (subscriber, template, body, user) => {
             },
           ],
           Subject: template.subject,
-          [`${template.bodyType === 1 ? "HTML" : "Text"}Part`]: body, //+ "[[UNSUB_LINK]]",
+          [`${template.bodyType === 1 ? "HTML" : "Text"}Part`]: body,
           EventPayload: JSON.stringify(subscriber),
         },
       ],

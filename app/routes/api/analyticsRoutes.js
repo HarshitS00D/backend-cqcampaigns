@@ -1,8 +1,8 @@
 const router = require("express").Router();
 const controllers = require("../../controllers");
 
-router.post("/sent", (req, res) => {});
-router.post("/bounce", (req, res) => {});
+router.post("/sent", controllers.analytics.eventHandler);
+router.post("/bounce", controllers.analytics.eventHandler);
 
 router.get("/", controllers.analytics.getAnalytics);
 

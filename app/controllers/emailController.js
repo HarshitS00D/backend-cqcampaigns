@@ -73,7 +73,8 @@ function getTransformedBody(body, analytics, req) {
   analytics.forEach((el) => {
     switch (el) {
       case 2:
-        result += `<a  href="${serverUrl}/api/subscriber/unsubscribe/${subscriber._doc._id}" >Unsubscribe</a>`;
+        result += `<a  href="[[UNSUB_LINK]]" >Unsubscribe</a>`;
+        // result += `<a  href="${serverUrl}/api/subscriber/unsubscribe/${subscriber._doc._id}" >Unsubscribe</a>`;
         break;
       case 0:
         result += `<img src="${serverUrl}/api/analytics/img?sub=${subscriber._doc._id}" >`;

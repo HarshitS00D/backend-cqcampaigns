@@ -9,4 +9,8 @@ module.exports = {
     if (response.error) return res.status(500).send(response);
     res.send(response);
   },
+  eventHandler: async (req, res) => {
+    console.log(req.body);
+    res.send("ok");
+  },
 };
