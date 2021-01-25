@@ -43,7 +43,7 @@ const sendEmails = async (req, res) => {
     for (subscriber of subscribers) {
       if (!subscriber.subscribed) continue;
       const resp = await services.email.sendMail(
-        subscriber,
+        subscriber._doc,
         template,
         getTransformedBody(template.body, template.analytics, req),
         req.user,

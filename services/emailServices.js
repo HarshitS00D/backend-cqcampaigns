@@ -18,8 +18,8 @@ const sendMail = async (subscriber, template, body, user, analyticsID) => {
           },
           To: [
             {
-              Name: subscriber._doc && subscriber._doc.name,
-              Email: subscriber._doc.email,
+              Name: subscriber.name,
+              Email: subscriber.email,
             },
           ],
           Subject: template.subject,
