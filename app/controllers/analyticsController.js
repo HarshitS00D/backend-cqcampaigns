@@ -14,9 +14,11 @@ module.exports = {
     Payload = JSON.parse(Payload);
     switch (event) {
       case "sent":
+        console.log({ event, Payload });
         res.send("sent");
         break;
       case "bounce":
+        console.log({ event, Payload });
         res.send("bounce");
         break;
       default:
