@@ -12,18 +12,14 @@ module.exports = {
   eventHandler: async (req, res) => {
     let { event, Payload } = req.body;
     if (Payload) Payload = JSON.parse(Payload);
-    switch (event) {
-      case "sent":
-        console.log({ event, Payload });
-        res.send("sent");
-        break;
-      case "bounce":
-        console.log({ event, Payload });
-        res.send("bounce");
-        break;
-      default:
-        console.log(req.body);
-        res.send(req.body);
-    }
+
+    if (!event || !event.length) return res.send("event err");
+    if (!Payload || !Payload.analyticsID) return res.send("payload err");
+    console.log({ event, Payload });
+    if (event === "sent") event = "delivered";
+    await services.analytics.updateStats(Payload.analyticsID, {
+      $inc: { [event]: 1 },
+    });
+    res.send(req.body);
   },
 };

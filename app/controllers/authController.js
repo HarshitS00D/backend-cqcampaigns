@@ -10,10 +10,9 @@ const checkAuth = (req, res, next) => {
     urlPaths.includes("unsubscribe") ||
     (urlPaths.includes("analytics") &&
       (urlPaths.includes("sent") || urlPaths.includes("bounce")))
-  ) {
-    console.log("skipped auth");
+  )
     return next();
-  }
+
   services.auth.verifyToken(authHeader, (err, user) => {
     if (err) {
       console.log(err);
