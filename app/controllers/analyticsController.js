@@ -17,9 +17,14 @@ module.exports = {
     if (!Payload || !Payload.analyticsID) return res.send("payload err");
     console.log({ event, Payload });
     if (event === "sent") event = "delivered";
-    await services.analytics.updateStats(Payload.analyticsID, {
-      $inc: { [event]: 1, sent: 1 },
-    });
-    res.send(req.body);
+    switch (event) {
+      case "unsub":
+        break;
+      default:
+        await services.analytics.updateStats(Payload.analyticsID, {
+          $inc: { [event]: 1, sent: 1 },
+        });
+    }
+    res.send(event);
   },
 };
