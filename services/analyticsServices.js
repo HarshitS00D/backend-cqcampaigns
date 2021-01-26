@@ -2,10 +2,19 @@ const { Campaign, Analytics } = require("../database/models");
 const _ = require("lodash");
 
 module.exports = {
-  updateCampaignStats: async (campaignID, payload) => {
+  createNewAnalytics: async (campaignID, payload = {}) => {
     try {
       const analytics = new Analytics({ campaignID, ...payload });
       await analytics.save();
+      return analytics;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  updateStats: async (_id, payload) => {
+    try {
+      const analytics = await Analytics.updateOne({ _id }, payload);
+
       return analytics;
     } catch (error) {
       console.log(error);

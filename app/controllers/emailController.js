@@ -35,7 +35,11 @@ const sendEmails = async (req, res) => {
         .status(400)
         .send({ error: "Empty subscriber list", subscribers });
 
-    const analytics = await services.analytics.updateCampaignStats(campaignID);
+    const analytics = await services.analytics.createNewAnalytics(campaignID, {
+      sent: 0,
+      delivered: 0,
+      bounced: 0,
+    });
 
     if (!analytics)
       return res.status(500).send({ error: "Internal Server Error" });

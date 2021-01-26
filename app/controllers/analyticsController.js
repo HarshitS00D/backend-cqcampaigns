@@ -12,18 +12,19 @@ module.exports = {
   eventHandler: async (req, res) => {
     let { event, Payload } = req.body;
     if (Payload) Payload = JSON.parse(Payload);
+
+    if (!event || !event.length) return res.send("event err");
+    if (!Payload || !Payload.analyticsID) return res.send("payload err");
+    console.log({ event, Payload });
+    if (event === "sent") event = "delivered";
     switch (event) {
-      case "sent":
-        console.log({ event, Payload });
-        res.send("sent");
-        break;
-      case "bounce":
-        console.log({ event, Payload });
-        res.send("bounce");
+      case "unsub":
         break;
       default:
-        console.log(req.body);
-        res.send(req.body);
+        await services.analytics.updateStats(Payload.analyticsID, {
+          $inc: { [event]: 1, sent: 1 },
+        });
     }
+    res.send(event);
   },
 };
