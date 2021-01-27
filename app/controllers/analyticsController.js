@@ -13,9 +13,9 @@ module.exports = {
     let { event, Payload } = req.body;
     if (Payload) Payload = JSON.parse(Payload);
 
+    console.log(req.body);
     if (!event || !event.length) return res.send("event err");
     if (!Payload || !Payload.analyticsID) return res.send("payload err");
-    console.log(req.body);
     if (event === "sent") event = "delivered";
     if (event === "bounce") event = "bounced";
     switch (event) {
