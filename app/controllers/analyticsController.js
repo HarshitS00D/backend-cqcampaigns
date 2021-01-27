@@ -17,6 +17,7 @@ module.exports = {
     if (!Payload || !Payload.analyticsID) return res.send("payload err");
     console.log({ event, Payload });
     if (event === "sent") event = "delivered";
+    if (event === "bounce") event = "bounced";
     switch (event) {
       case "unsub":
         break;
