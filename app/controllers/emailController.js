@@ -39,6 +39,7 @@ const sendEmails = async (req, res) => {
       sent: 0,
       delivered: 0,
       bounced: 0,
+      open: 0,
     });
 
     if (!analytics)

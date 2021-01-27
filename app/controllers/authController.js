@@ -14,6 +14,7 @@ const checkAuth = (req, res, next) => {
     (urlPaths.includes("analytics") &&
       (urlPaths.includes("sent") ||
         urlPaths.includes("bounce") ||
+        urlPaths.includes("open") ||
         urlPaths.includes("img")))
   ) {
     return next();

@@ -139,10 +139,9 @@ const Analytics = new mongoose.Schema(
     sent: { type: Number, defaultValue: 0 },
     delivered: { type: Number, defaultValue: 0 },
     bounced: { type: Number, defaultValue: 0 },
+    open: { type: Number, defaultValue: 0 },
   },
-  {
-    timestamps: true,
-  }
+  { strict: false, timestamps: true }
 );
 
 const Settings = new mongoose.Schema({

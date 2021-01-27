@@ -29,7 +29,7 @@ module.exports = {
     res.send(event);
   },
   onImgLoad: async (req, res) => {
-    console.log(req);
+    console.log(req.ip);
     res.send("");
   },
 };
