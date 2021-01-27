@@ -12,8 +12,10 @@ const checkAuth = (req, res, next) => {
       (urlPaths.includes("sent") ||
         urlPaths.includes("bounce") ||
         urlPaths.includes("img")))
-  )
+  ) {
+    console.log(urlPaths);
     return next();
+  }
 
   services.auth.verifyToken(authHeader, (err, user) => {
     if (err) {
