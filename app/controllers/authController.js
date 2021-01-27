@@ -43,7 +43,7 @@ const login = (req, res) => {
     return;
   }
 
-  User.findOne({ email })
+  User.findOne({ email }, { __v: 0 })
     .then(async (user) => {
       if (!user)
         return res

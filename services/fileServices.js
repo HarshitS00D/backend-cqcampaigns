@@ -7,13 +7,18 @@ module.exports = {
   readCSV: async (fileName) => {
     try {
       const filePath = config.storagePath + fileName;
-      const jsonArray = await csv().fromFile(filePath);
+      const jsonArray = await csv()
+        .fromFile(filePath)
+        .on("header", (headers) => {
+          if (!headers.map((el) => el.toLowerCase()).includes("email"))
+            throw new Error("Email header not present");
+        });
       fs.unlinkSync(filePath);
       return jsonArray.map((obj) =>
         _.mapKeys(obj, (val, key) => key.toLowerCase())
       );
     } catch (e) {
-      return e;
+      return e.message;
     }
   },
   createCSVfromJson: (jsonArray) => {

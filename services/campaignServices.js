@@ -1,4 +1,5 @@
-const { Campaign, Analytics } = require("../database/models");
+const { Campaign } = require("../database/models");
+const { getCampaignStats } = require("./analyticsServices");
 const _ = require("lodash");
 
 module.exports = {
@@ -37,7 +38,7 @@ module.exports = {
       if (!userID) throw new Error("No user id");
 
       const total = await Campaign.countDocuments({ userID, ...filters });
-      const templates = await Campaign.find(
+      let campaigns = await Campaign.find(
         { userID, ...filters },
         {
           ...(Array.isArray(select)
@@ -49,13 +50,20 @@ module.exports = {
                 {}
               )
             : select),
+          __v: 0,
         }
       )
-
         .skip(pagination.skip || 0)
         .limit(pagination.limit || total);
 
-      return { data: templates, total };
+      campaigns = await Promise.all(
+        campaigns.map(async (el) => ({
+          ...el._doc,
+          analytics: await getCampaignStats(el._id),
+        }))
+      );
+
+      return { data: campaigns, total };
     } catch (error) {
       console.log(error);
       return error;

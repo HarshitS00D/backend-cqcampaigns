@@ -11,9 +11,9 @@ const readList = async (req, res) => {
   if (!file) return res.send("No file found");
 
   let csvData = await services.file.readCSV(file.filename);
-  if (csvData.length < 1) return res.send("No data available");
-  if (!csvData[0].email) return res.send("Email Header not present");
 
+  if (!Array.isArray(csvData)) return res.send(csvData);
+  if (csvData.length < 1) return res.send("No data available");
   res.send(generateDataWithKeys(csvData));
 };
 
