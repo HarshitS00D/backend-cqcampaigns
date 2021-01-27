@@ -9,7 +9,9 @@ const checkAuth = (req, res, next) => {
   if (
     urlPaths.includes("unsubscribe") ||
     (urlPaths.includes("analytics") &&
-      (urlPaths.includes("sent") || urlPaths.includes("bounce")))
+      (urlPaths.includes("sent") ||
+        urlPaths.includes("bounce") ||
+        urlPaths.includes("img")))
   )
     return next();
 
