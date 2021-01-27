@@ -1,11 +1,14 @@
 const _ = require("lodash");
+const url = require("url");
+
 const { compareCrypt } = require("../../utils");
 const services = require("../../services");
 const { User } = require("../../database/models");
 
 const checkAuth = (req, res, next) => {
   const authHeader = req.headers["authorization"];
-  const urlPaths = req.originalUrl.split("/");
+  const href = req.protocol + "://" + req.get("host") + req.originalUrl;
+  const urlPaths = url.parse(href).pathname.split("/");
   if (
     urlPaths.includes("unsubscribe") ||
     (urlPaths.includes("analytics") &&
@@ -13,7 +16,6 @@ const checkAuth = (req, res, next) => {
         urlPaths.includes("bounce") ||
         urlPaths.includes("img")))
   ) {
-    console.log(urlPaths);
     return next();
   }
 
