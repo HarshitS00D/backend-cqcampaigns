@@ -16,16 +16,21 @@ module.exports = {
     console.log(req.body);
     if (!event || !event.length) return res.send("event err");
     if (!Payload || !Payload.analyticsID) return res.send("payload err");
-    if (event === "sent") event = "delivered";
-    if (event === "bounce") event = "bounced";
+
+    if (event === "unsub") return res.send("unsub");
+    event = getFieldFromEvent(event);
+
+    const payload = {
+      $inc: { [event]: 1 },
+    };
+
     switch (event) {
-      case "unsub":
+      case "delivered":
+      case "bounced":
+        payload.$inc.sent = 1;
         break;
-      default:
-        await services.analytics.updateStats(Payload.analyticsID, {
-          $inc: { [event]: 1, sent: 1 },
-        });
     }
+    await services.analytics.updateStats(Payload.analyticsID, payload);
     res.send(event);
   },
   onImgLoad: async (req, res) => {
@@ -33,3 +38,9 @@ module.exports = {
     res.send("");
   },
 };
+
+function getFieldFromEvent(e) {
+  if (e === "sent") return "delivered";
+  if (e === "bounce") return "bounced";
+  return e;
+}
