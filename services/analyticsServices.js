@@ -36,9 +36,10 @@ module.exports = {
               monthNo: { [`$${groupBy ? groupBy : "month"}`]: "$createdAt" },
               //  year: { $year: "$createdAt" },
             },
-            sent: { $sum: "$sent" },
-            delivered: { $sum: "$delivered" },
-            bounced: { $sum: "$bounced" },
+            sent: { $sum: { $size: "$sent" } },
+            delivered: { $sum: { $size: "$delivered" } },
+            bounced: { $sum: { $size: "$bounced" } },
+            open: { $sum: { $size: "$open" } },
           },
         },
       ]).sort({ "_id.year": 1, "_id.monthNo": 1 });

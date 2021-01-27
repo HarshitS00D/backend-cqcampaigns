@@ -10,7 +10,7 @@ module.exports = {
     res.send(response);
   },
   eventHandler: async (req, res) => {
-    let { event, Payload } = req.body;
+    let { event, email, Payload } = req.body;
     if (Payload) Payload = JSON.parse(Payload);
 
     console.log(req.body);
@@ -21,13 +21,13 @@ module.exports = {
     event = getFieldFromEvent(event);
 
     const payload = {
-      $inc: { [event]: 1 },
+      $addToSet: { [event]: email },
     };
 
     switch (event) {
       case "delivered":
       case "bounced":
-        payload.$inc.sent = 1;
+        payload.$addToSet.sent = email;
         break;
     }
     await services.analytics.updateStats(Payload.analyticsID, payload);
