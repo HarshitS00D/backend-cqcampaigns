@@ -28,4 +28,8 @@ module.exports = {
     }
     res.send(event);
   },
+  onImgLoad: async (req, res) => {
+    console.log(req);
+    res.send("");
+  },
 };

@@ -81,7 +81,7 @@ function getTransformedBody(body, analytics, req) {
         result += `<a  href="${serverUrl}/api/subscriber/unsubscribe/${subscriber._doc._id}" >Unsubscribe</a>`;
         break;
       case 0:
-        result += `<img src="${serverUrl}/api/analytics/img?sub=${subscriber._doc._id}" >`;
+        result += `<img style="display:none;" src="${serverUrl}/api/analytics/img?sub=${subscriber._doc._id}" >`;
         break;
     }
   });
