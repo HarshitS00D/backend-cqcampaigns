@@ -36,10 +36,10 @@ const sendEmails = async (req, res) => {
         .send({ error: "Empty subscriber list", subscribers });
 
     const analytics = await services.analytics.createNewAnalytics(campaignID, {
-      sent: 0,
-      delivered: 0,
-      bounced: 0,
-      open: 0,
+      sent: [],
+      delivered: [],
+      bounced: [],
+      open: [],
     });
 
     if (!analytics)

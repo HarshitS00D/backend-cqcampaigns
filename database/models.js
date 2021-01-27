@@ -136,10 +136,10 @@ const Analytics = new mongoose.Schema(
       ref: "Campaign",
       required: true,
     },
-    sent: { type: Number, defaultValue: 0 },
-    delivered: { type: Number, defaultValue: 0 },
-    bounced: { type: Number, defaultValue: 0 },
-    open: { type: Number, defaultValue: 0 },
+    sent: { type: Array, defaultValue: [] },
+    delivered: { type: Array, defaultValue: [] },
+    bounced: { type: Array, defaultValue: [] },
+    open: { type: Array, defaultValue: [] },
   },
   { strict: false, timestamps: true }
 );
