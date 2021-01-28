@@ -50,7 +50,7 @@ const sendEmails = async (req, res) => {
       const resp = await services.email.sendMail(
         subscriber._doc,
         template,
-        getTransformedBody(template.body, template.analytics, req),
+        getTransformedBody(template, req),
         req.user,
         analytics._id
       );
@@ -72,17 +72,19 @@ const sendEmails = async (req, res) => {
   res.send(response);
 };
 
-function getTransformedBody(body, analytics, req) {
-  let result = body + "";
+function getTransformedBody({ body, bodyType, analytics }, req) {
+  let result = { TextPart: "", HTMLPart: "" };
+  //result[`${bodyType === 1 ? "HTML" : "Text"}Part`] = body + "";
+  result.HTMLPart = ` <div> ${body}<br> </div>`;
   const serverUrl = req.protocol + "://" + req.get("host");
   analytics.forEach((el) => {
     switch (el) {
       case 2:
         //result += `<a  href="[[UNSUB_LINK]]" >Unsubscribe</a>`;
-        result += `<a  href="${serverUrl}/api/subscriber/unsubscribe/${subscriber._doc._id}" >Unsubscribe</a>`;
+        result.HTMLPart += `<a  href="${serverUrl}/api/subscriber/unsubscribe/${subscriber._doc._id}" >Unsubscribe</a>`;
         break;
       case 0:
-        result += `<img style="display:none;" src="${serverUrl}/api/analytics/img?sub=${subscriber._doc._id}" >`;
+        result.HTMLPart += `<img style="display:none;" src="${serverUrl}/api/analytics/img?sub=${subscriber._doc._id}" >`;
         break;
     }
   });

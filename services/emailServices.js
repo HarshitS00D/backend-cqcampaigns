@@ -8,7 +8,6 @@ const sendMail = async (subscriber, template, body, user, analyticsID) => {
       (settings || {}).MailjetUsername,
       (settings || {}).MailjetPassword
     );
-
     const response = await mailjet.post("send", { version: "v3.1" }).request({
       Messages: [
         {
@@ -23,8 +22,8 @@ const sendMail = async (subscriber, template, body, user, analyticsID) => {
             },
           ],
           Subject: template.subject,
-          [`${template.bodyType === 1 ? "HTML" : "Text"}Part`]: body,
           EventPayload: JSON.stringify({ subscriber, analyticsID }),
+          ...body,
         },
       ],
     });

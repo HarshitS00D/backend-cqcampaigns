@@ -96,6 +96,10 @@ const Template = new mongoose.Schema(
       type: String,
       required: true,
     },
+    campaignID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Campaign",
+    },
   },
   {
     timestamps: true,

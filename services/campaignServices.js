@@ -1,4 +1,4 @@
-const { Campaign } = require("../database/models");
+const { Campaign, Template } = require("../database/models");
 const { getCampaignStats } = require("./analyticsServices");
 const _ = require("lodash");
 
@@ -6,8 +6,18 @@ module.exports = {
   createCampaign: async (data, { _id: userID }) => {
     try {
       if (!userID) throw new Error("No user id");
-      const campaign = new Campaign({ userID, ...data });
-      // await new Analytics({ campaignID: campaign._id }).save();
+
+      const template = new Template({ ...data.template, userID });
+
+      const campaign = new Campaign({
+        userID,
+        ..._.omit(data, "template"),
+        templateID: template._id,
+      });
+
+      template.campaignID = campaign._id;
+
+      await template.save();
       await campaign.save();
       return campaign;
     } catch (error) {
@@ -21,6 +31,11 @@ module.exports = {
 
       const res = await Campaign.deleteMany({
         _id: { $in: campaignIDs },
+        userID: user._id,
+      });
+
+      await Template.deleteMany({
+        campaignID: { $in: campaignIDs },
         userID: user._id,
       });
 

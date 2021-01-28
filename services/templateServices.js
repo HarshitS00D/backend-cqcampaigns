@@ -50,7 +50,7 @@ module.exports = {
       if (!user) throw new Error("No user id");
 
       const res = await Template.deleteMany({
-        $or: templateIDs.map((_id) => ({ _id })),
+        _id: { $in: templateIDs },
         userID: user._id,
       });
 
