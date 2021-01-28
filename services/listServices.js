@@ -28,7 +28,7 @@ module.exports = {
   updateList: async (_id, update, user) => {
     try {
       if (!user) throw new Error("No user id");
-      if (update.$push.subscribers) {
+      if (update.$push && update.$push.subscribers) {
         update.$push.subscribers = await Promise.all(
           update.$push.subscribers.map(async (subscriber) => {
             subscriber = new Subscriber({

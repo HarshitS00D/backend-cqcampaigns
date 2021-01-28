@@ -60,25 +60,36 @@ const deleteLists = async (req, res) => {
 const updateList = async (req, res) => {
   const { _id, update } = req.body;
 
-  const faultyRecords = [];
-  const validatedRecords = [];
+  if (update.$push && update.$push.subscribers) {
+    //to update subscribers in list
 
-  for (subscriber of update.$push.subscribers)
-    (validators.email(subscriber.email)
-      ? validatedRecords
-      : faultyRecords
-    ).push(_.omit(subscriber, "key"));
+    const faultyRecords = [];
+    const validatedRecords = [];
 
-  if (validatedRecords.length < 1)
-    return res.status(406).send({ error: "No Valid Record Present" });
+    for (subscriber of update.$push.subscribers)
+      (validators.email(subscriber.email)
+        ? validatedRecords
+        : faultyRecords
+      ).push(_.omit(subscriber, "key"));
 
-  update.$push.subscribers = validatedRecords;
+    if (validatedRecords.length < 1)
+      return res.status(406).send({ error: "No Valid Record Present" });
 
-  const result = await services.list.updateList(_id, update, req.user);
+    update.$push.subscribers = validatedRecords;
 
-  if (!result.ok) res.status(500).send({ error: "Internal Server Error" });
+    const result = await services.list.updateList(_id, update, req.user);
 
-  res.send({ success: "List Updated", faultyRecords });
+    if (!result.ok) res.status(500).send({ error: "Internal Server Error" });
+
+    res.send({ success: "List Updated", faultyRecords });
+  } else if (update.$set && update.$set.name) {
+    // to update list name
+
+    const result = await services.list.updateList(_id, update, req.user);
+
+    if (!result.ok) res.status(500).send({ error: "Internal Server Error" });
+    else res.send("List Name Updated");
+  }
 };
 
 const getUserLists = async (req, res) => {
