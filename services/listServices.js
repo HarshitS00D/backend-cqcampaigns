@@ -33,7 +33,6 @@ module.exports = {
           update.$push.subscribers.map(async (subscriber) => {
             subscriber = new Subscriber({
               ...subscriber,
-              listID: ObjectId(_id),
             });
             await subscriber.save();
             return subscriber;
@@ -44,7 +43,6 @@ module.exports = {
       const res = await List.updateOne({ _id, user: user._id }, update);
       return res;
     } catch (error) {
-      console.log(error);
       return error;
     }
   },

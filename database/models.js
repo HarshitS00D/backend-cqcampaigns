@@ -65,7 +65,7 @@ const Subscriber = new mongoose.Schema(
     timestamps: true,
     strict: false,
   }
-);
+).index({ email: 1, listID: 1 }, { unique: true });
 
 const Template = new mongoose.Schema(
   {

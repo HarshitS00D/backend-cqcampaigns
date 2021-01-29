@@ -70,7 +70,7 @@ const updateList = async (req, res) => {
       (validators.email(subscriber.email)
         ? validatedRecords
         : faultyRecords
-      ).push(_.omit(subscriber, "key"));
+      ).push({ ..._.omit(subscriber, "key"), listID: _id });
 
     if (validatedRecords.length < 1)
       return res.status(406).send({ error: "No Valid Record Present" });
@@ -79,12 +79,14 @@ const updateList = async (req, res) => {
 
     const result = await services.list.updateList(_id, update, req.user);
 
-    if (!result.ok) res.status(500).send({ error: "Internal Server Error" });
+    if (result.code && result.code === 11000)
+      return res.send({ warn: "List Updated (duplicate emails skipped)" });
 
+    if (!result.ok)
+      return res.status(500).send({ error: "Internal Server Error" });
     res.send({ success: "List Updated", faultyRecords });
   } else if (update.$set && update.$set.name) {
     // to update list name
-
     const result = await services.list.updateList(_id, update, req.user);
 
     if (!result.ok) res.status(500).send({ error: "Internal Server Error" });
