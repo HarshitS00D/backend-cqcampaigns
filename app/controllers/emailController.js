@@ -18,7 +18,7 @@ const sendEmails = async (req, res) => {
     response = await services.email.sendMail(
       { email: to },
       template,
-      template.body,
+      getTransformedBody({ body: template.body }),
       req.user
     );
     if (
@@ -76,18 +76,20 @@ function getTransformedBody({ body, bodyType, analytics }, req) {
   let result = { TextPart: "", HTMLPart: "" };
   //result[`${bodyType === 1 ? "HTML" : "Text"}Part`] = body + "";
   result.HTMLPart = ` <div> ${body}<br> </div>`;
-  const serverUrl = req.protocol + "://" + req.get("host");
-  analytics.forEach((el) => {
-    switch (el) {
-      case 2:
-        //result += `<a  href="[[UNSUB_LINK]]" >Unsubscribe</a>`;
-        result.HTMLPart += `<a  href="${serverUrl}/api/subscriber/unsubscribe/${subscriber._doc._id}" >Unsubscribe</a>`;
-        break;
-      case 0:
-        result.HTMLPart += `<img style="display:none;" src="${serverUrl}/api/analytics/img?sub=${subscriber._doc._id}" >`;
-        break;
-    }
-  });
+  if (analytics) {
+    const serverUrl = req.protocol + "://" + req.get("host");
+    analytics.forEach((el) => {
+      switch (el) {
+        case 2:
+          //result += `<a  href="[[UNSUB_LINK]]" >Unsubscribe</a>`;
+          result.HTMLPart += `<a  href="${serverUrl}/api/subscriber/unsubscribe/${subscriber._doc._id}" >Unsubscribe</a>`;
+          break;
+        case 0:
+          result.HTMLPart += `<img style="display:none;" src="${serverUrl}/api/analytics/img?sub=${subscriber._doc._id}" >`;
+          break;
+      }
+    });
+  }
   return result;
 }
 
