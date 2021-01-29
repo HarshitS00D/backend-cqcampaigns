@@ -29,19 +29,22 @@ module.exports = {
     try {
       if (!user) throw new Error("No user id");
       if (update.$push && update.$push.subscribers) {
+        let res = {};
         update.$push.subscribers = await Promise.all(
           update.$push.subscribers.map(async (subscriber) => {
-            subscriber = new Subscriber({
-              ...subscriber,
-            });
-            await subscriber.save();
+            subscriber = await new Subscriber(subscriber).save();
+            res = await List.updateOne(
+              { _id, user: user._id },
+              { $inc: { total: 1 }, $push: { subscribers: subscriber } }
+            );
             return subscriber;
           })
         );
-        update.$inc = { total: update.$push.subscribers.length };
+        return res;
+      } else {
+        const res = await List.updateOne({ _id, user: user._id }, update);
+        return res;
       }
-      const res = await List.updateOne({ _id, user: user._id }, update);
-      return res;
     } catch (error) {
       return error;
     }
@@ -50,7 +53,7 @@ module.exports = {
     try {
       if (!user) throw new Error("No user id");
       const list = await List.deleteMany({
-        $or: listIDs.map((_id) => ({ _id })),
+        _id: { $in: listIDs },
         user: user._id,
       });
       let subs = {};
