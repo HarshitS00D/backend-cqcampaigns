@@ -13,6 +13,22 @@ const createCampaign = async (req, res) => {
   res.send("Campaign Created");
 };
 
+const editCampaign = async (req, res) => {
+  const { campaignID } = req.params;
+
+  const response = await services.campaign.editCampaign(
+    campaignID,
+    req.body,
+    req.user
+  );
+
+  if (response.errors) {
+    console.log(response);
+    return res.status(500).send({ error: "Internal Server Error" });
+  }
+  res.send("Campaign Updated");
+};
+
 const deleteCampaigns = async (req, res) => {
   const { campaignIDs } = req.query;
   const result = await services.campaign.deleteCampaigns(campaignIDs, req.user);
@@ -33,4 +49,5 @@ module.exports = {
   createCampaign,
   deleteCampaigns,
   getCampaigns,
+  editCampaign,
 };
