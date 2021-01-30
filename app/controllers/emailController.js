@@ -72,7 +72,7 @@ const sendEmails = async (req, res) => {
   res.send(response);
 };
 
-function getTransformedBody({ body, bodyType, analytics }, req) {
+function getTransformedBody({ body, analytics }, req) {
   let result = { TextPart: "", HTMLPart: "" };
   //result[`${bodyType === 1 ? "HTML" : "Text"}Part`] = body + "";
   result.HTMLPart = ` <div> ${body}<br> </div>`;
