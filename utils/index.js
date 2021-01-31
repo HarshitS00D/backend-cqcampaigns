@@ -49,6 +49,15 @@ function generateParsedQuery(query) {
 
 const userRoles = ["SuperAdmin", "Admin", "User"];
 
+function escapeHTML(unsafe) {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 module.exports = {
   compareCrypt,
   hashCrypt,
@@ -56,6 +65,7 @@ module.exports = {
   disableRoute,
   generateDataWithKeys,
   generateParsedQuery,
+  escapeHTML,
   validators,
   userRoles,
 };
