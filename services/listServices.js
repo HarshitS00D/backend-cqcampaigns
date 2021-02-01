@@ -1,4 +1,4 @@
-const { User, List, Subscriber } = require("../database/models");
+const { User, List, Subscriber, Campaign } = require("../database/models");
 const { ObjectId } = require("mongoose").Types;
 const _ = require("lodash");
 
@@ -58,6 +58,8 @@ module.exports = {
         subs[listID] = await Subscriber.deleteMany({
           listID,
         });
+
+      await Campaign.updateMany({ listID: { $in: listIDs } }, { listID: null });
 
       return { list, subs };
     } catch (error) {
