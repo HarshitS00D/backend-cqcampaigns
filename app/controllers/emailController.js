@@ -75,9 +75,9 @@ const sendEmails = async (req, res) => {
 function getTransformedBody({ body, bodyType, analytics }, req) {
   let result = { TextPart: "", HTMLPart: "" };
   //result[`${bodyType === 1 ? "HTML" : "Text"}Part`] = body + "";
-  result.HTMLPart = `<div> ${
+  result.HTMLPart = `${
     bodyType === 1 ? body : escapeHTML(body)
-  }<br> </div>`;
+  }<br>`;
 
   if (analytics && req) {
     const serverUrl = req.protocol + "://" + req.get("host");
@@ -93,8 +93,6 @@ function getTransformedBody({ body, bodyType, analytics }, req) {
       }
     });
   }
-  // console.log(result);
-  // console.log("----------------");
   return result;
 }
 
