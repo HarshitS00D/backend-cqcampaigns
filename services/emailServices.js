@@ -8,7 +8,7 @@ const sendMail = async (subscriber, template, body, user, analyticsID) => {
       (settings || {}).MailjetUsername,
       (settings || {}).MailjetPassword
     );
-    const response = await mailjet.post("send", { version: "v3.1" }).request({
+    const payload = {
       Messages: [
         {
           From: {
@@ -26,9 +26,14 @@ const sendMail = async (subscriber, template, body, user, analyticsID) => {
           ...body,
         },
       ],
-    });
+    };
+    //console.log(JSON.stringify({ body, payload }, null, 2));
+    const response = await mailjet
+      .post("send", { version: "v3.1" })
+      .request(payload);
 
     //console.log(JSON.stringify(response, null, 2));
+    //return {};
     return response;
   } catch (error) {
     console.log(JSON.stringify(error, null, 2));

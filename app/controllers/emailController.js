@@ -1,5 +1,5 @@
 const services = require("../../services");
-const { validators } = require("../../utils");
+const { validators, escapeHTML } = require("../../utils");
 
 const sendEmails = async (req, res) => {
   const { listID, templateID, campaignID, to } = req.body;
@@ -18,7 +18,7 @@ const sendEmails = async (req, res) => {
     response = await services.email.sendMail(
       { email: to },
       template,
-      getTransformedBody({ body: template.body }),
+      getTransformedBody(template),
       req.user
     );
     if (
@@ -75,8 +75,11 @@ const sendEmails = async (req, res) => {
 function getTransformedBody({ body, bodyType, analytics }, req) {
   let result = { TextPart: "", HTMLPart: "" };
   //result[`${bodyType === 1 ? "HTML" : "Text"}Part`] = body + "";
-  result.HTMLPart = ` <div> ${body}<br> </div>`;
-  if (analytics) {
+  result.HTMLPart = `${
+    bodyType === 1 ? body : escapeHTML(body)
+  }<br>`;
+
+  if (analytics && req) {
     const serverUrl = req.protocol + "://" + req.get("host");
     analytics.forEach((el) => {
       switch (el) {

@@ -64,6 +64,8 @@ module.exports = {
         await Campaign.updateOne({ listID }, { listID: null });
       }
 
+      await Campaign.updateMany({ listID: { $in: listIDs } }, { listID: null });
+
       return { list, subs };
     } catch (error) {
       console.log(error);

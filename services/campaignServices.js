@@ -25,6 +25,26 @@ module.exports = {
       return error;
     }
   },
+  editCampaign: async (_id, data, { _id: userID }) => {
+    try {
+      if (!userID) throw new Error("No user id");
+
+      await Template.updateOne(
+        { _id: data.template._id, campaignID: _id, userID },
+        data.template
+      );
+
+      const res = await Campaign.updateOne(
+        { _id, userID },
+        _.omit(data, "template")
+      );
+
+      return res;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  },
   deleteCampaigns: async (campaignIDs, user) => {
     try {
       if (!user) throw new Error("No user id");
