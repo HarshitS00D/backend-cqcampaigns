@@ -20,15 +20,30 @@ module.exports = {
       console.log(error);
     }
   },
-  getAnalytics: async (userID, groupBy) => {
+  getAnalytics: async (userID, groupBy, year) => {
     try {
       let campaignIDs = await Campaign.find({ userID }, { _id: 1 });
       campaignIDs = campaignIDs.map(({ _doc }) => _doc._id);
 
+      groupBy = (groupBy || "month").trim().toLowerCase();
+
+      const currentYear = new Date().getFullYear();
       const query = [
         {
           $match: {
-            campaignID: { $in: campaignIDs },
+            campaignID: {
+              $in: campaignIDs,
+            },
+            ...(groupBy === "month"
+              ? {
+                  createdAt: {
+                    $gt: new Date(`${year || currentYear}-01-01 00:00:00`),
+                    $lt: new Date(
+                      `${parseInt(year || currentYear) + 1}-1-1 00:00:00`
+                    ),
+                  },
+                }
+              : {}),
           },
         },
       ];
@@ -37,7 +52,7 @@ module.exports = {
         query.push({
           $group: {
             _id: {
-              monthNo: { [`$${groupBy ? groupBy : "month"}`]: "$createdAt" },
+              monthNo: { [`$${groupBy}`]: "$createdAt" },
               //  year: { $year: "$createdAt" },
             },
             sent: { $sum: { $size: "$sent" } },
@@ -46,7 +61,7 @@ module.exports = {
             open: { $sum: { $size: "$open" } },
           },
         });
-
+      //console.log(JSON.stringify(query, null, 2));
       const analytics = await Analytics.aggregate(query).sort({
         "_id.year": 1,
         "_id.monthNo": 1,
